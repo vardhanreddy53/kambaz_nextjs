@@ -25,7 +25,7 @@ export default function lab1() {
   
   <p>
     This is a quick and easy recipe for a delicious weeknight pasta dish. 
-    It's a great option when you're short on time but still want a satisfying meal.
+    Its a great option when youre short on time but still want a satisfying meal.
   </p>
   
   <h2>Ingredients</h2>
@@ -43,7 +43,7 @@ export default function lab1() {
   <h5>Ordered list</h5>
   <ol>
     <li>Get a large pot with some water add salt and bring it to boil.</li>
-    <li>Add the pasta to the boiling water(<b>do not break it!!!</b>) and cook according to the package directions until it's <b>al dente</b> (firm to the bite).</li>
+    <li>Add the pasta to the boiling water(<b>do not break it!!!</b>) and cook according to the package directions until its <b>al dente</b> (firm to the bite).</li>
     <li>While the pasta is cooking, heat the olive oil in a separate large pan over medium heat.</li>
     <li>Add the minced garlic and cook for about 1 minute, until it becomes fragrant. Be careful not to burn it.</li>
     <li>Pour the crushed tomatoes into the pan, season with salt and pepper, and bring to a simmer.</li>
