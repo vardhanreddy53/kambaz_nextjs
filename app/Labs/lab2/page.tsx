@@ -92,7 +92,7 @@ Please
 <a href="https://www.lipsum.com" id="wd-lipsum">click here</a>
 to get dummy text<br/>
 <h4>Textarea</h4>
-<textarea placeholder="Enter your comments here..." rows="4" cols="50"></textarea>
+<textarea placeholder="Enter your comments here..." rows={4} cols={50}></textarea>
 
 <h4>File Upload</h4>
 <input type="file" id="wd-file-upload" />
