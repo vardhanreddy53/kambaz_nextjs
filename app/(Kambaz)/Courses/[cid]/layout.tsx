@@ -1,8 +1,8 @@
 import { ReactNode } from "react";
 import CourseNavigation from "./Navigation";
 
-export default function CoursesLayout(
-  { children, params }: { children: ReactNode; params: { cid: string } }
+export default async function CoursesLayout(
+  { children, params }: { children: ReactNode; params: Promise<{ cid: string }> }
 ) {
   const { cid } = params;
   return (
