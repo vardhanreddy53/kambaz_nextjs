@@ -8,12 +8,15 @@ export default function lab1() {
       <div id="wd-h-tag">
         <h1>Heading Tag</h1>
         <p>
-          In HTML, heading tags are used to define headings of different levels. They range from <h1> (the highest level i.e h1)</h1><h6> (the lowest i.e h6)</h6>The size of the heading decreases as the number increases.
+          In HTML, heading tags are used to define headings of different levels. They range from</p>
+          <h1> the highest level i.e h1</h1>
+          <h6>the lowest i.e h6</h6>
+          <p>The size of the heading decreases as the number increases.
         </p>
         <h2>About Me</h2>
       <p>
         My name is Sai Vardhan Reddy Pathuri, and I am a current Masters student at Northeastern University.</p>
-        <p>I         am            enrolled in       the CS5610            Web             Development      course under         Professor Jose.<br/>
+        <p>I am enrolled in the CS5610 Web Development course under Professor Jose.<br/>
         I am excited to build my web development portfolio through this class.<br/>
       </p>
     </div>
@@ -144,11 +147,11 @@ My favorite books (in no particular order)
 <div id="wd-images">
   <h5>Image tag</h5>
   Loading an image from the internet: <br />
-  <img id="wd-starship" width="400px"   src="https://www.staradvertiser.com/wp-content/uploads/2021/08/web1_Starship-gap2.jpg" />
+  <img id="wd-starship" width="400px"   src="https://www.staradvertiser.com/wp-content/uploads/2021/08/web1_Starship-gap2.jpg" alt="Starship"/>
   <br />
   Loading a local image:
   <br />
-  <img id="wd-teslabot" src="/Tesla-Bot-AI.avif" height="200px" />
+  <img id="wd-teslabot" src="/Tesla-Bot-AI.avif" height="200px" alt="TeslaBot"/>
   </div>
     </div>
   );
