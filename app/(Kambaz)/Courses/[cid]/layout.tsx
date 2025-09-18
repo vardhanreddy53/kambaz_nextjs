@@ -12,12 +12,11 @@ export default function CoursesLayout(
       <table>
         <tbody>
           <tr>
-            <td valign="top" style={{ width: 200 }}>
+            <td style={{ verticalAlign: "top", width: 200 }}>
               <CourseNavigation />
             </td>
-            <td valign="top" style={{ width: "100%" }}>
-              {" "}
-              {children}{" "}
+            <td style={{ verticalAlign: "top", width: "100%" }}>
+              {children}
             </td>
           </tr>
         </tbody>
