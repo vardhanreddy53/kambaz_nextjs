@@ -1,6 +1,10 @@
+ import Link from "next/link";
  export default function Lab2(){
     return(
         <div id="wd-forms">
+              <h1>CSS LABS starts from </h1> 
+              <Link href="/Labs/lab3" >
+        Lab 3</Link>
   <h4>Form Elements</h4>
   <form id="wd-text-fields">
     <h5>Text Fields</h5>

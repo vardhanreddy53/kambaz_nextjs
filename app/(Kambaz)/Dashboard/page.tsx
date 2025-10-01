@@ -1,107 +1,140 @@
 import Link from "next/link";
 import Image from "next/image";
+import { Row, Col, Card, Button, CardBody, CardImg, CardTitle, CardText } from "react-bootstrap";
+
 export default function Dashboard() {
   return (
     <div id="wd-dashboard">
       <h1 id="wd-dashboard-title">Dashboard</h1> <hr />
       <h2 id="wd-dashboard-published">Published Courses (7)</h2> <hr />
       <div id="wd-dashboard-courses">
-        {/* Course 1 */}
-        <div className="wd-dashboard-course">
-          <Link href="/Courses/1234" className="wd-dashboard-course-link">
-            <Image src="/images/reactjs.png" width={200} height={150} alt="ReactJS course image" />
-            <div>
-              <h5>CS5610 Webdev</h5>
-              <p className="wd-dashboard-course-title">
-                Full Stack software developer
-              </p>
-              <button>Go</button>
-            </div>
-          </Link>
-        </div>
-        
-        {/* Course 2 */}
-        <div className="wd-dashboard-course">
-          <Link href="/Courses/2345" className="wd-dashboard-course-link">
-            <Image src="/images/datamining.jpg" width={200} height={150} alt="Data Mining course image" />
-            <div>
-              <h5>CS5800 Data Mining</h5>
-              <p className="wd-dashboard-course-title">
-                Data mining techniques and applications
-              </p>
-              <button>Go</button>
-            </div>
-          </Link>
-        </div>
+        <Row xs={1} md={5} className="g-4">
+          {/* Course 1 */}
+          <Col className="wd-dashboard-course" style={{ width: "300px" }}>
+            <Card>
+              <Link href="/Courses/5610/Home" className="wd-dashboard-course-link text-decoration-none text-dark">
+                <CardImg variant="top" src="/images/reactjs.png" width="100%" height={160} />
+                <CardBody>
+                  <CardTitle className="wd-dashboard-course-title text-nowrap overflow-hidden">
+                    CS5610 Webdev
+                  </CardTitle>
+                  <CardText className="wd-dashboard-course-description overflow-hidden" style={{ height: "100px" }}>
+                    Full Stack software developer
+                  </CardText>
+                  <Button variant="primary">Go</Button>
+                </CardBody>
+              </Link>
+            </Card>
+          </Col>
 
-        {/* Course 3 */}
-        <div className="wd-dashboard-course">
-          <Link href="/Courses/3456" className="wd-dashboard-course-link">
-            <Image src="/images/algorithms.jpg" width={200} height={150} alt="Algorithms course image" />
-            <div>
-              <h5>CS5100 Algorithms</h5>
-              <p className="wd-dashboard-course-title">
-                Advanced algorithms and data structures
-              </p>
-              <button>Go</button>
-            </div>
-          </Link>
-        </div>
+          {/* Course 2 */}
+          <Col className="wd-dashboard-course" style={{ width: "300px" }}>
+            <Card>
+              <Link href="/Courses/5800/Home" className="wd-dashboard-course-link text-decoration-none text-dark">
+                <CardImg variant="top" src="/images/datamining.jpg" width="100%" height={160} />
+                <CardBody>
+                  <CardTitle className="wd-dashboard-course-title text-nowrap overflow-hidden">
+                    CS5800 Data Mining
+                  </CardTitle>
+                  <CardText className="wd-dashboard-course-description overflow-hidden" style={{ height: "100px" }}>
+                    Data mining techniques and applications
+                  </CardText>
+                  <Button variant="primary">Go</Button>
+                </CardBody>
+              </Link>
+            </Card>
+          </Col>
 
-        {/* Course 4 */}
-        <div className="wd-dashboard-course">
-          <Link href="/Courses/4567" className="wd-dashboard-course-link">
-            <Image src="/images/os.jpeg" width={200} height={150} alt="Operating Systems course image" />
-            <div>
-              <h5>CS5700 Operating Systems</h5>
-              <p className="wd-dashboard-course-title">
-                Fundamentals of modern operating systems
-              </p>
-              <button>Go</button>
-            </div>
-          </Link>
-        </div>
-        
-        {/* Course 5 */}
-        <div className="wd-dashboard-course">
-          <Link href="/Courses/5678" className="wd-dashboard-course-link">
-            <Image src="/images/security.jpeg" width={200} height={150} alt="Security course image" />
-            <div>
-              <h5>CS5500 Software Security</h5>
-              <p className="wd-dashboard-course-title">
-                Principles of secure software design
-              </p>
-              <button>Go</button>
-            </div>
-          </Link>
-        </div>
+          {/* Course 3 */}
+          <Col className="wd-dashboard-course" style={{ width: "300px" }}>
+            <Card>
+              <Link href="/Courses/5100/Home" className="wd-dashboard-course-link text-decoration-none text-dark">
+                <CardImg variant="top" src="/images/algorithms.jpg" width="100%" height={160} />
+                <CardBody>
+                  <CardTitle className="wd-dashboard-course-title text-nowrap overflow-hidden">
+                    CS5100 Algorithms
+                  </CardTitle>
+                  <CardText className="wd-dashboard-course-description overflow-hidden" style={{ height: "100px" }}>
+                    Advanced algorithms and data structures
+                  </CardText>
+                  <Button variant="primary">Go</Button>
+                </CardBody>
+              </Link>
+            </Card>
+          </Col>
 
-        {/* Course 6 */}
-        <div className="wd-dashboard-course">
-          <Link href="/Courses/6789" className="wd-dashboard-course-link">
-            <Image src="/images/network.jpeg" width={200} height={150} alt="Networking course image" />
-            <div>
-              <h5>CS5750 Computer Networks</h5>
-              <p className="wd-dashboard-course-title">
-                Introduction to networking protocols
-              </p>
-              <button>Go</button>
-            </div>
-          </Link>
-        </div>
-        {/*Course 7*/}
-        <div className="wd-dashboard-course">
-          <Link href="/Courses/6785" className="wd-dashboard-course-link">
-            <Image src="/images/database.jpeg" width={200} height={150} alt="Networking course image" />
-            <div>
-              <h5>CS5200 Database Management SYstem</h5>
-              <p className="wd-dashboard-course-title">
-                Introduction to databases
-              </p>
-              <button>Go</button>
-            </div>
-          </Link>
-        </div>
+          {/* Course 4 */}
+          <Col className="wd-dashboard-course" style={{ width: "300px" }}>
+            <Card>
+              <Link href="/Courses/5700/Home" className="wd-dashboard-course-link text-decoration-none text-dark">
+                <CardImg variant="top" src="/images/os.jpeg" width="100%" height={160} />
+                <CardBody>
+                  <CardTitle className="wd-dashboard-course-title text-nowrap overflow-hidden">
+                    CS5700 Operating Systems
+                  </CardTitle>
+                  <CardText className="wd-dashboard-course-description overflow-hidden" style={{ height: "100px" }}>
+                    Fundamentals of modern operating systems
+                  </CardText>
+                  <Button variant="primary">Go</Button>
+                </CardBody>
+              </Link>
+            </Card>
+          </Col>
+
+          {/* Course 5 */}
+          <Col className="wd-dashboard-course" style={{ width: "300px" }}>
+            <Card>
+              <Link href="/Courses/5500/Home" className="wd-dashboard-course-link text-decoration-none text-dark">
+                <CardImg variant="top" src="/images/security.jpeg" width="100%" height={160} />
+                <CardBody>
+                  <CardTitle className="wd-dashboard-course-title text-nowrap overflow-hidden">
+                    CS5500 Software Security
+                  </CardTitle>
+                  <CardText className="wd-dashboard-course-description overflow-hidden" style={{ height: "100px" }}>
+                    Principles of secure software design
+                  </CardText>
+                  <Button variant="primary">Go</Button>
+                </CardBody>
+              </Link>
+            </Card>
+          </Col>
+
+          {/* Course 6 */}
+          <Col className="wd-dashboard-course" style={{ width: "300px" }}>
+            <Card>
+              <Link href="/Courses/5750/Home" className="wd-dashboard-course-link text-decoration-none text-dark">
+                <CardImg variant="top" src="/images/network.jpeg" width="100%" height={160} />
+                <CardBody>
+                  <CardTitle className="wd-dashboard-course-title text-nowrap overflow-hidden">
+                    CS5750 Computer Networks
+                  </CardTitle>
+                  <CardText className="wd-dashboard-course-description overflow-hidden" style={{ height: "100px" }}>
+                    Introduction to networking protocols
+                  </CardText>
+                  <Button variant="primary">Go</Button>
+                </CardBody>
+              </Link>
+            </Card>
+          </Col>
+
+          {/* Course 7 */}
+          <Col className="wd-dashboard-course" style={{ width: "300px" }}>
+            <Card>
+              <Link href="/Courses/5200/Home" className="wd-dashboard-course-link text-decoration-none text-dark">
+                <CardImg variant="top" src="/images/database.jpeg" width="100%" height={160} />
+                <CardBody>
+                  <CardTitle className="wd-dashboard-course-title text-nowrap overflow-hidden">
+                    CS5200 Database Management System
+                  </CardTitle>
+                  <CardText className="wd-dashboard-course-description overflow-hidden" style={{ height: "100px" }}>
+                    Introduction to databases
+                  </CardText>
+                  <Button variant="primary">Go</Button>
+                </CardBody>
+              </Link>
+            </Card>
+          </Col>
+        </Row>
       </div>
     </div>
   );
