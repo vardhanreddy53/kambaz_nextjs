@@ -1,38 +1,41 @@
-import { NavItem, NavLink } from "react-bootstrap";
-import Nav from "react-bootstrap/Nav";
+"use client";
+import { ListGroup } from "react-bootstrap";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export default function TOC() {
- return (
-   <Nav variant="pills">
-     <NavItem>
-       <Link href="/Labs" passHref legacyBehavior>
-         <NavLink>Labs</NavLink>
-       </Link>
-     </NavItem>
-     <NavItem>
-       <Link href="/Labs/lab1" passHref legacyBehavior>
-         <NavLink>Lab 1</NavLink>
-       </Link>
-     </NavItem>
-     <NavItem>
-       <Link href="/Labs/lab2" passHref legacyBehavior>
-         <NavLink active>Lab 2</NavLink>
-       </Link>
-     </NavItem>
-     <NavItem>
-       <Link href="/Labs/lab3" passHref legacyBehavior>
-         <NavLink>Lab 3</NavLink>
-       </Link>
-     </NavItem>
-     <NavItem>
-       <Link href="/" passHref legacyBehavior>
-         <NavLink>Kambaz(kanbas typo ig)</NavLink>
-       </Link>
-     </NavItem>
-     <NavItem>
-       <NavLink href="https://github.com/vardhanreddy53" target="_blank">My GitHub</NavLink>
-     </NavItem>
-   </Nav>
- );
+  const pathname = usePathname();
+
+  return (
+    <ListGroup>
+      <Link href="/Labs" style={{ textDecoration: 'none' }}>
+        <ListGroup.Item action active={pathname === "/Labs"}>
+          Labs
+        </ListGroup.Item>
+      </Link>
+      <Link href="/Labs/lab1" style={{ textDecoration: 'none' }}>
+        <ListGroup.Item action active={pathname === "/Labs/lab1"}>
+          Lab 1
+        </ListGroup.Item>
+      </Link>
+      <Link href="/Labs/lab2" style={{ textDecoration: 'none' }}>
+        <ListGroup.Item action active={pathname === "/Labs/lab2"}>
+          Lab 2
+        </ListGroup.Item>
+      </Link>
+      <Link href="/Labs/lab3" style={{ textDecoration: 'none' }}>
+        <ListGroup.Item action active={pathname === "/Labs/lab3"}>
+          Lab 3
+        </ListGroup.Item>
+      </Link>
+      <Link href="/" style={{ textDecoration: 'none' }}>
+        <ListGroup.Item action>
+          Kambaz(kanbas typo ig)
+        </ListGroup.Item>
+      </Link>
+      <ListGroup.Item action href="https://github.com/vardhanreddy53" target="_blank">
+        My GitHub
+      </ListGroup.Item>
+    </ListGroup>
+  );
 }
