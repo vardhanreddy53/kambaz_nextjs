@@ -7,6 +7,7 @@ export default function Kambaz(){
         <p>my master in computer science from Northeastern university i have joined NEU for Fall 2025 and taken CS5610</p><p>202610 WebDev By Jose Annunziato</p>
     <a href="https://github.com/vardhanreddy53/kambaz_nextjs">Github</a>
     <div id="wd-labs">
+      <h1>This is</h1>
      <h1>Labs</h1>
      <ol>
        <li>
