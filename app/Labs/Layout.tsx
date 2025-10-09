@@ -9,7 +9,7 @@ export default function LabsLayout({
     <div className="container-fluid">
       <div className="row">
         <div className="col-md-2 col-lg-2">
-          <TOC />
+          <TOC/>
         </div>
         <div className="col-md-10 col-lg-10">
           {children}
