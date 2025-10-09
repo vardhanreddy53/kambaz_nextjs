@@ -2,6 +2,7 @@ import { Nav, NavItem, NavLink } from "react-bootstrap";
 import Link from "next/link";
 export default function TOC() {
  return (
+  <div>
    <Nav variant="pills">
      <NavItem>
        <NavLink href="/Labs" as={Link}>Labs</NavLink>
@@ -22,5 +23,7 @@ export default function TOC() {
        <NavLink href="https://github.com/vardhanreddy53">My GitHub</NavLink>
      </NavItem>
    </Nav>
+   <h1>Hello Another Breakpoint</h1>
+   </div>
 );}
 
