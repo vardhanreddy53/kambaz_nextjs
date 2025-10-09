@@ -6,6 +6,7 @@ export default function LabsLayout({
 }: Readonly<{ children: ReactNode }>) {
   return (
     <div className="container-fluid">
+      <h1>Hello world</h1>
       <div className="row">
         <div className="col-md-2 col-lg-2">
           <TOC/>
