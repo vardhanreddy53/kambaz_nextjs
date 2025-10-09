@@ -23,7 +23,6 @@ export default function TOC() {
        <NavLink href="https://github.com/vardhanreddy53">My GitHub</NavLink>
      </NavItem>
    </Nav>
-   <h1>Hello Another Breakpoint</h1>
    </div>
 );}
 
