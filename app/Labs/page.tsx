@@ -3,7 +3,6 @@ import TOC from "./TOC";
 export default function Labs() {
  return (
    <div id="wd-labs">
-    <TOC />
      <h1>Labs</h1>
      <ol>
        <li>
