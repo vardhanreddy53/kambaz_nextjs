@@ -33,7 +33,6 @@ export default function Assignments() {
           <div>
             <BsGripVertical className="me-2 fs-5" />
             <strong>ASSIGNMENTS</strong>
-            <span className="ms-3 text-muted">40% of Total</span>
           </div>
           <div>
             <BsPlus className="fs-4" />

@@ -18,6 +18,7 @@ import BootstrapTables from "./BootstrapTables";
 import BootstrapLists from "./BootstrapLists";
 import BootstrapForm from "./BootstrapForms";
 import BootstrapNavigation from "./BootstrapNavigation";
+import Flex from "./Flex";
 
 export default function lab3(){
     return(
@@ -56,6 +57,7 @@ export default function lab3(){
      <Zindex/>
      <Float/>
      <Grid/>
+     <Flex/>
      <ReactIcons/>
      <Bootgrid/>
      <Ss/>
