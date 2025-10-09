@@ -7,19 +7,19 @@ export default function TOC() {
        <NavLink href="/Labs" as={Link}>Labs</NavLink>
      </NavItem>
      <NavItem>
-       <NavLink href="/Labs/Lab1" as={Link}>Lab 1</NavLink>
+       <NavLink href="/Labs/lab1" as={Link}>Lab 1</NavLink>
      </NavItem>
      <NavItem>
-       <NavLink href="/Labs/Lab2" as={Link}>Lab 2</NavLink>
+       <NavLink href="/Labs/lab2" as={Link}>Lab 2</NavLink>
      </NavItem>
      <NavItem>
-       <NavLink href="/Labs/Lab3" as={Link}>Lab 3</NavLink>
+       <NavLink href="/Labs/lab3" as={Link}>Lab 3</NavLink>
      </NavItem>
      <NavItem>
        <NavLink href="/" as={Link}>Kambaz</NavLink>
      </NavItem>
      <NavItem>
-       <NavLink href="https://github.com/">My GitHub</NavLink>
+       <NavLink href="https://github.com/vardhanreddy53">My GitHub</NavLink>
      </NavItem>
    </Nav>
 );}

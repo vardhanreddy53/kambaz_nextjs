@@ -6,16 +6,19 @@ export default function BootstrapNavigation(){
   <h2>Tabs</h2>
   <Nav variant="tabs">
     <NavItem>
-      <NavLink href="#/Labs/lab3/Active">Active</NavLink>
+      <NavLink href="./lab1">Link 1</NavLink>
     </NavItem>
     <NavItem>
-      <NavLink href="#/Labs/lab3/Link">Link 1</NavLink>
+      <NavLink href="./lab2">Link 2</NavLink>
     </NavItem>
     <NavItem>
-      <NavLink href="#/Labs/lab3/Link2">Link 2</NavLink>
+      <NavLink href="./lab3">Link 3</NavLink>
+    </NavItem>
+     <NavItem>
+       <NavLink href="https://github.com/vardhanreddy53">My GitHub</NavLink>
     </NavItem>
     <NavItem>
-      <NavLink href="#/Labs/lab3/Disabled" disabled>Disabled</NavLink>
+      <NavLink href="./lab3/Disabled" disabled>Disabled</NavLink>
     </NavItem>
   </Nav>
   <div id="wd-css-navigating-with-cards">
