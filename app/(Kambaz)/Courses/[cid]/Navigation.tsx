@@ -1,26 +1,48 @@
 'use client'
 import Link from "next/link";
-import { useParams } from 'next/navigation';
+import { useParams, usePathname } from 'next/navigation';
+
 export default function CourseNavigation() {
   const { cid } = useParams();
+  const pathname = usePathname();
+  
+  const links = ["Home", "Modules", "Piazza", "Zoom", "Assignments", "Quizzes", "Grades", "people"];
+  
   return (
     <div id="wd-courses-navigation" className="wd list-group fs-5 rounded-0">
-      <Link href={`/Courses/${cid}/Home`} id="wd-course-home-link"
-        className="list-group-item active border border-0"> Home </Link><br/>
-      <Link href={`/Courses/${cid}/Modules`} id="wd-course-modules-link"
-        className="list-group-item text-danger border border-0"> Modules </Link><br/>
-      <Link href="https://piazza.com/" id="wd-course-piazza-link"
-        className="list-group-item text-danger border border-0"> Piazza </Link><br/>
-      <Link href="https://zoom.com" id="wd-course-zoom-link"
-        className="list-group-item text-danger border border-0"> Zoom </Link><br/>
-      <Link href={`/Courses/${cid}/Assignments`} id="wd-course-assignments-link"
-        className="list-group-item text-danger border border-0"> Assignments </Link><br/>
-      <Link href="https://northeastern.instructure.com/courses/225999/quizzes" id="wd-course-quizzes-link"
-        className="list-group-item text-danger border border-0"> Quizzes </Link><br/>
-      <Link href="https://northeastern.instructure.com/courses/225999/grades" id="wd-course-grades-link"
-        className="list-group-item text-danger border border-0"> Grades </Link><br/>
-      <Link href={`/Courses/${cid}/people`} id="wd-course-people-link"
-        className="list-group-item text-danger border border-0"> People </Link><br/>
+      {links.map((link) => {
+        let dest: string;
+        
+        switch (link) {
+          case "Piazza":
+            dest = "https://piazza.com/";
+            break;
+          case "Zoom":
+            dest = "https://zoom.com";
+            break;
+          case "Quizzes":
+            dest = `https://northeastern.instructure.com/courses/${cid}/quizzes`;
+            break;
+          case "Grades":
+            dest = `https://northeastern.instructure.com/courses/${cid}/grades`;
+            break;
+          default:
+            dest = `/Courses/${cid}/${link}`;
+        }
+
+        const isActive = pathname.includes(`/${link}`);
+        
+        return (
+          <Link
+            key={link}
+            href={dest}
+            className={`list-group-item border border-0 ${isActive ? "active" : "text-danger"}`}
+            {...(link === "Piazza" || link === "Zoom" || link === "Quizzes" || link === "Grades" ? { target: "_blank" } : {})}
+          >
+            {link}
+          </Link>
+        );
+      })}
     </div>
   );
-}
+} 

@@ -1,17 +1,29 @@
 import { ReactNode } from "react";
 import CourseNavigation from "./Navigation";
+import Breadcrumb from "./Breadcrumb"; 
+import * as db from "../../Database/page";
 
 export default async function CoursesLayout({
   children,
   params,
-}: Readonly<{
+}: {
   children: ReactNode;
-  params: Promise<{ cid: string }>;
-}>) {
+  params: { cid: string };
+}) {
   const { cid } = await params;
+  const course = db.courses.find((c) => c._id === cid);
+
+  if (!course) {
+    return (
+      <div id="wd-courses">
+        <h2 className="text-danger">Course Not Found (ID: {cid})</h2>
+      </div>
+    );
+  }
+
   return (
     <div id="wd-courses">
-      <h2 className="text-danger">Course {cid}</h2>
+      <Breadcrumb courseName={course.name} />
       <hr />
       <div className="d-flex">
         <div className="d-none d-md-block">

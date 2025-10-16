@@ -11,15 +11,18 @@ export default function Kambaz(){
      <ol>
        <li>
          <Link href="/Labs/lab1" id="wd-lab1-link">
-           Lab 1</Link>
+           Lab 1(basic html)</Link>
        </li>
        <li>
          <Link href="/Labs/lab2" id="wd-lab2-link">
-           Lab 2 </Link>
+           Lab 2(Basic html)</Link>
        </li>
        <li>
         <Link href="/Labs/lab3" id="wd-lab2-link">
-        Lab 3</Link>
+        Lab 3(CSS+bootstrap)</Link>
+       </li>
+       <li>
+        <Link href="/Labs/lab4" id="wd-lab4-link">Lab4(JS)</Link>
        </li>
      </ol>
    </div>
