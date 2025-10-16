@@ -8,9 +8,10 @@ export default async function CoursesLayout({
   params,
 }: {
   children: ReactNode;
-  params: { cid: string };
+  params: Promise<{ cid: string }>;
 }) {
   const { cid } = await params;
+  
   const course = db.courses.find((c) => c._id === cid);
 
   if (!course) {

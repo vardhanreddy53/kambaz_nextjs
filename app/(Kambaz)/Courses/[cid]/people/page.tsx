@@ -4,8 +4,28 @@ import { useParams } from "next/navigation";
 import { Table } from "react-bootstrap";
 import { FaUserCircle } from "react-icons/fa";
 
-import users from "../../../Database/users.json";
-import enrollments from "../../../Database/enrollments.json";
+import usersData from "../../../Database/users.json";
+import enrollmentsData from "../../../Database/enrollments.json";
+
+interface User {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  loginId: string;
+  section: string;
+  role: string;
+  lastActivity: string;
+  totalActivity: string;
+}
+
+interface Enrollment {
+  _id: string;
+  user: string;
+  course: string;
+}
+
+const users: User[] = usersData as User[];
+const enrollments: Enrollment[] = enrollmentsData as Enrollment[];
 
 export default function PeopleTable() {
   const params = useParams();
@@ -26,13 +46,16 @@ export default function PeopleTable() {
         </thead>
         <tbody>
           {users
-            .filter((usr: any) =>
+            
+            .filter((usr: User) =>
+             
               enrollments.some(
-                (enrollment: any) =>
+                (enrollment: Enrollment) =>
                   enrollment.user === usr._id && enrollment.course === cid
               )
             )
-            .map((user: any) => (
+            
+            .map((user: User) => (
               <tr key={user._id}>
                 <td className="wd-full-name text-nowrap">
                   <FaUserCircle className="me-2 fs-1 text-secondary" />
