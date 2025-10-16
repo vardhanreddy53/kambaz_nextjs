@@ -18,7 +18,7 @@ export default function Labs() {
         Lab 3(bootstrapcss)</Link>
        </li>
        <li>
-        <Link href="/labs/lab4" id="wd-lab4-link">
+        <Link href="/Labs/lab4" id="wd-lab4-link">
         lab4</Link>
         </li>
      </ol>
