@@ -4,20 +4,36 @@ import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { Form, Button, Row, Col } from 'react-bootstrap';
 
+interface Assignment {
+    _id: string;
+    title: string;
+    course: string;
+    due: string;
+    available: string;
+    until: string;
+    points: number;
+    description: string;
+}
+
 import assignments from "../../../../Database/assignment.json";
 
-const findAssignmentById = (aid: string) => {
-    return assignments.find((assignment: any) => assignment._id === aid);
+const assignmentList: Assignment[] = assignments as Assignment[];
+
+
+const findAssignmentById = (aid: string): Assignment | undefined => {
+    return assignmentList.find((assignment: Assignment) => assignment._id === aid);
 };
 
 export default function AssignmentEditor() {
     const params = useParams();
-    const { cid, aid } = params as { cid: string, aid: string };
+    const { cid, aid } = params as { cid: string, aid: string }; 
 
     const assignment = findAssignmentById(aid);
 
-    const defaultAssignment = {
+    const defaultAssignment: Assignment = {
+        _id: "new",
         title: "New Assignment",
+        course: cid,
         description: "Assignment details go here.",
         points: 100,
         due: "2024-05-13T23:59",
@@ -25,7 +41,7 @@ export default function AssignmentEditor() {
         until: "2024-05-20T23:59",
     };
 
-    const currentAssignment = assignment || defaultAssignment;
+    const currentAssignment: Assignment = assignment || defaultAssignment;
 
     return (
         <div id="wd-assignments-editor" className="container mt-4">
