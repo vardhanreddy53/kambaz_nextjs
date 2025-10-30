@@ -1,18 +1,35 @@
-import { ReactNode } from "react";
+"use client";
+import { ReactNode, useState } from "react";
 import CourseNavigation from "./Navigation";
 import Breadcrumb from "./Breadcrumb"; 
-import * as db from "../../Database/page";
+import { useSelector } from "react-redux";
+import { useParams } from "next/navigation";
+import { FaAlignJustify } from "react-icons/fa";
 
-export default async function CoursesLayout({
-  children,
-  params,
-}: {
-  children: ReactNode;
-  params: Promise<{ cid: string }>;
-}) {
-  const { cid } = await params;
-  
-  const course = db.courses.find((c) => c._id === cid);
+interface Course {
+  _id: string;
+  name: string;
+  number: string;
+  startDate: string;
+  endDate: string;
+  department: string;
+  credits: number;
+  description: string;
+  author?: string;
+  image: string;
+}
+
+interface RootState {
+  coursesReducer: {
+    courses: Course[];
+  };
+}
+
+export default function CoursesLayout({ children }: { children: ReactNode }) {
+  const { cid } = useParams();
+  const { courses } = useSelector((state: RootState) => state.coursesReducer);
+  const course = courses.find((course) => course._id === cid);
+  const [showNavigation, setShowNavigation] = useState(true);
 
   if (!course) {
     return (
@@ -24,15 +41,22 @@ export default async function CoursesLayout({
 
   return (
     <div id="wd-courses">
-      <Breadcrumb courseName={course.name} />
+      <h2>
+        <FaAlignJustify 
+          className="me-4 fs-4 mb-1" 
+          style={{ cursor: "pointer" }}
+          onClick={() => setShowNavigation(!showNavigation)}
+        />
+        {course?.name}
+      </h2>
       <hr />
       <div className="d-flex">
-        <div className="d-none d-md-block">
-          <CourseNavigation />
-        </div>
-        <div className="flex-fill">
-          {children}
-        </div>
+        {showNavigation && (
+          <div>
+            <CourseNavigation />
+          </div>
+        )}
+        <div className="flex-fill">{children}</div>
       </div>
     </div>
   );
