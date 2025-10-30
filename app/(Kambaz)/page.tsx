@@ -24,6 +24,9 @@ export default function Kambaz(){
        <li>
         <Link href="/Labs/lab4" id="wd-lab4-link">Lab4(JS)</Link>
        </li>
+       <li>
+        <Link href="/Labs/lab5" id="wd-lab4-link">Lab5(Handler functinons)</Link>
+       </li>
      </ol>
    </div>
     </div>

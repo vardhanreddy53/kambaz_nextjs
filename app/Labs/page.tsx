@@ -19,7 +19,11 @@ export default function Labs() {
        </li>
        <li>
         <Link href="/Labs/lab4" id="wd-lab4-link">
-        lab4</Link>
+        lab4(Javascript)</Link>
+        </li>
+        <li>
+        <Link href="/Labs/lab5" id="wd-lab4-link">
+        lab5(handler functions)</Link>
         </li>
      </ol>
    </div>
