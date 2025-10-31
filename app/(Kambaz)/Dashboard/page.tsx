@@ -46,7 +46,6 @@ interface RootState {
 export default function Dashboard() {
   const { courses } = useSelector((state: RootState) => state.coursesReducer);
   const { currentUser } = useSelector((state: RootState) => state.accountReducer);
-  const { enrollments } = db;
   const dispatch = useDispatch();
   
   const [course, setCourse] = useState<Course>({
@@ -60,6 +59,16 @@ export default function Dashboard() {
     image: "/images/reactjs.png", 
     description: "New Description"
   });
+
+  // Filter courses based on enrollment if user is logged in
+  const displayedCourses = currentUser 
+    ? courses.filter((course) =>
+        db.enrollments.some(
+          (enrollment: { user: string; course: string }) =>
+            enrollment.user === currentUser._id &&
+            enrollment.course === course._id
+        ))
+    : courses; // Show all courses if no user is logged in
 
   return (
     <div id="wd-dashboard" className="p-4">
@@ -95,18 +104,23 @@ export default function Dashboard() {
       
       <hr />
       
-      <h2 id="wd-dashboard-published">Published Courses ({courses.length})</h2> <hr />
+      <h2 id="wd-dashboard-published">Published Courses ({displayedCourses.length})</h2> <hr />
+      
+      {!currentUser && (
+        <div className="alert alert-info">
+          Please sign in to view your enrolled courses.
+        </div>
+      )}
+
+      {currentUser && displayedCourses.length === 0 && (
+        <div className="alert alert-warning">
+          You are not enrolled in any courses yet.
+        </div>
+      )}
       
       <div id="wd-dashboard-courses">
         <Row xs={1} md={5} className="g-4">
-          {courses
-            .filter((course) =>
-              enrollments.some(
-                (enrollment: { user: string; course: string }) =>
-                  enrollment.user === currentUser?._id &&
-                  enrollment.course === course._id
-              ))
-            .map((course) => (
+          {displayedCourses.map((course) => (
             <Col key={course._id} className="wd-dashboard-course" style={{ width: "300px" }}>
               <Card>
                 <Link
