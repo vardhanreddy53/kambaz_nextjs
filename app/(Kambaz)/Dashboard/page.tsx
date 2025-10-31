@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Row, Col, Card, Button, CardImg, CardBody, CardTitle, CardText, FormControl } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { addNewCourse, deleteCourse, updateCourse } from "../Courses/reducer";
+import * as db from "../Database/page";
 
 interface Course {
   _id: string;
@@ -18,14 +19,34 @@ interface Course {
   image: string;
 }
 
+interface User {
+  _id: string;
+  username: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  dob: string;
+  role: string;
+  loginId: string;
+  section: string;
+  lastActivity: string;
+  totalActivity: string;
+}
+
 interface RootState {
   coursesReducer: {
     courses: Course[];
+  };
+  accountReducer: {
+    currentUser: User | null;
   };
 }
 
 export default function Dashboard() {
   const { courses } = useSelector((state: RootState) => state.coursesReducer);
+  const { currentUser } = useSelector((state: RootState) => state.accountReducer);
+  const { enrollments } = db;
   const dispatch = useDispatch();
   
   const [course, setCourse] = useState<Course>({
@@ -78,7 +99,14 @@ export default function Dashboard() {
       
       <div id="wd-dashboard-courses">
         <Row xs={1} md={5} className="g-4">
-          {courses.map((course) => (
+          {courses
+            .filter((course) =>
+              enrollments.some(
+                (enrollment: { user: string; course: string }) =>
+                  enrollment.user === currentUser?._id &&
+                  enrollment.course === course._id
+              ))
+            .map((course) => (
             <Col key={course._id} className="wd-dashboard-course" style={{ width: "300px" }}>
               <Card>
                 <Link
