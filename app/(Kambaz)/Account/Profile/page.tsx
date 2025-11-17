@@ -3,7 +3,7 @@ import { redirect, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setCurrentUser } from "../reducer";
-import { Button, FormControl, Form } from "react-bootstrap";
+import { Button, Form } from "react-bootstrap";
 import * as client from "../client";
 
 interface User {
@@ -27,14 +27,14 @@ interface RootState {
   };
 }
 
-
-
 export default function Profile() {
   const [profile, setProfile] = useState<User | null>(null);
   const dispatch = useDispatch();
   const router = useRouter();
   const { currentUser } = useSelector((state: RootState) => state.accountReducer);
+  
   const updateProfile = async () => {
+    if (!profile) return; // Add null check
     const updatedProfile = await client.updateUser(profile);
     dispatch(setCurrentUser(updatedProfile));
   };
@@ -53,9 +53,9 @@ export default function Profile() {
     redirect("/Account/Signin");
   };
 
-
   useEffect(() => {
     fetchProfile();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser]);
 
   if (!profile) {
