@@ -25,6 +25,10 @@ export default function Labs() {
         <Link href="/Labs/lab5" id="wd-lab4-link">
         lab5(handler functions)</Link>
         </li>
+         <li>
+        <Link href="/Labs/lab6" id="wd-lab4-link">
+        lab6(API)</Link>
+        </li>
      </ol>
    </div>
 );}

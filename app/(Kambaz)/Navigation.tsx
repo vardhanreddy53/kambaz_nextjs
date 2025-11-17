@@ -34,7 +34,7 @@ const navItems: NavItem[] = [
   {
     id: "wd-course-link",
     label: "Courses",
-    href: "/Dashboard",
+    href: "/Courses",  // Changed from /Dashboard to /Courses
     Icon: LiaBookSolid,
     isLink: true,
   },

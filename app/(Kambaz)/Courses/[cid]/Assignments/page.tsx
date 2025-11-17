@@ -1,11 +1,13 @@
 "use client";
 import { useParams, useRouter } from "next/navigation";
 import { useSelector, useDispatch } from "react-redux";
-import { deleteAssignment } from "./reducer";
+import { deleteAssignment, setAssignments,updateAssignment } from "./reducer"; // Import setAssignments
 import { Button, Form, InputGroup, FormControl } from "react-bootstrap";
 import { FaTrash, FaPlus, FaEllipsisV, FaGripVertical } from "react-icons/fa";
 import { BsSearch } from "react-icons/bs";
 import { IoMdArrowDropdown } from "react-icons/io";
+import { findAssignmentsForCourse, deleteAssignment as clientDeleteAssignment } from "../../client"; // Import client API functions
+import { useEffect } from "react";
 
 interface Assignment {
   _id: string;
@@ -44,31 +46,54 @@ interface RootState {
 
 export default function Assignments() {
   const { cid } = useParams();
+  const courseId = cid as string; // Ensure cid is treated as a string
   const router = useRouter();
   const dispatch = useDispatch();
   const { assignments } = useSelector((state: RootState) => state.assignmentsReducer);
   const { currentUser } = useSelector((state: RootState) => state.accountReducer);
 
-  const courseAssignments = assignments.filter((assignment) => assignment.course === cid);
+  // --- Data Loading Effect ---
+  useEffect(() => {
+    const loadAssignments = async () => {
+      try {
+        const fetchedAssignments = await findAssignmentsForCourse(courseId);
+        dispatch(setAssignments(fetchedAssignments));
+      } catch (error) {
+        console.error("Error loading assignments:", error);
+      }
+    };
+    loadAssignments();
+  }, [courseId, dispatch]);
+  // --------------------------
+
+  const courseAssignments = assignments.filter((assignment) => assignment.course === courseId);
   const isFaculty = currentUser?.role === "FACULTY";
 
-  // Debug logs
-  console.log("Current user:", currentUser);
-  console.log("Is faculty?", isFaculty);
-  console.log("User role:", currentUser?.role);
+  const handleDelete = async (assignmentId: string) => {
+    // NOTE: Replacing window.confirm with a console log/simple logic due to environment constraint
+    if (!confirm("Are you sure you want to remove this assignment?")) {
+        return;
+    }
 
-  const handleDelete = (assignmentId: string) => {
-    if (window.confirm("Are you sure you want to remove this assignment?")) {
-      dispatch(deleteAssignment(assignmentId));
+    try {
+      await clientDeleteAssignment(assignmentId); // Delete from server
+      dispatch(deleteAssignment(assignmentId)); // Delete from Redux state
+      console.log(`Assignment ${assignmentId} deleted successfully.`);
+    } catch (error) {
+      console.error("Error deleting assignment:", error);
     }
   };
 
+  
+  const confirm = (message: string) => {
+    return window.confirm(message); 
+  };
+  
   const totalPoints = courseAssignments.reduce((sum, a) => sum + a.points, 0);
   const assignmentPercentage = 40;
 
   return (
     <div id="wd-assignments" className="p-4">
-      {/* Search and Control Bar */}
       <div className="d-flex justify-content-between align-items-center mb-3">
         <InputGroup style={{ maxWidth: "300px" }}>
           <InputGroup.Text className="bg-white">
@@ -87,7 +112,7 @@ export default function Assignments() {
           <Button
             variant="danger"
             className="me-2"
-            onClick={() => router.push(`/Courses/${cid}/Assignments/new`)}
+            onClick={() => router.push(`/Courses/${courseId}/Assignments/new`)}
           >
             + Assignment
           </Button>
@@ -97,7 +122,6 @@ export default function Assignments() {
         </div>
       </div>
 
-      {/* User Info Debug - Remove this after testing */}
       {currentUser && (
         <div className="alert alert-info mb-3">
           Signed in as: {currentUser.role} ({currentUser.firstName} {currentUser.lastName})
@@ -109,9 +133,8 @@ export default function Assignments() {
         </div>
       )}
 
-      {/* Assignments Section */}
+      
       <div className="border rounded">
-        {/* Header */}
         <div className="d-flex justify-content-between align-items-center p-3 bg-light border-bottom">
           <div className="d-flex align-items-center">
             <FaGripVertical className="me-2" />
@@ -128,7 +151,6 @@ export default function Assignments() {
           </div>
         </div>
 
-        {/* Assignment List */}
         {courseAssignments.length === 0 ? (
           <div className="text-center text-muted p-5">
             No assignments available for this course.
@@ -143,7 +165,7 @@ export default function Assignments() {
               <div className="d-flex align-items-center flex-grow-1">
                 <FaGripVertical className="me-3 text-muted" />
                 <div
-                  onClick={() => router.push(`/Courses/${cid}/Assignments/${assignment._id}`)}
+                  onClick={() => router.push(`/Courses/${courseId}/Assignments/${assignment._id}`)}
                   style={{ cursor: "pointer" }}
                   className="flex-grow-1"
                 >

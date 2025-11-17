@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useSelector, useDispatch } from "react-redux";
 import { addAssignment, updateAssignment } from "../reducer";
+import { createAssignmentForCourse, updateAssignment as clientUpdateAssignment } from "../../../client"; // Import client API
 import { Form, Button, Row, Col } from 'react-bootstrap';
 
 interface Assignment {
@@ -24,58 +25,63 @@ interface RootState {
 
 export default function AssignmentEditor() {
     const { cid, aid } = useParams();
+    const courseId = cid as string;
+    const assignmentId = aid as string;
     const router = useRouter();
     const dispatch = useDispatch();
     const { assignments } = useSelector((state: RootState) => state.assignmentsReducer);
 
-    // Debug: Log assignments
-    console.log("All assignments from Redux:", assignments);
-    console.log("Current aid:", aid);
-    console.log("Current cid:", cid);
+    const isNew = assignmentId === "new";
+    const existingAssignment = assignments.find((a) => a._id === assignmentId);
 
-    const isNew = aid === "new";
-    const existingAssignment = assignments.find((a) => a._id === aid);
-
-    console.log("Is new?", isNew);
-    console.log("Existing assignment:", existingAssignment);
-
-    const [assignment, setAssignment] = useState<Omit<Assignment, "_id"> & { _id?: string }>({
-        _id: isNew ? undefined : (aid as string),
+    const initialAssignmentState = {
+        _id: isNew ? undefined : assignmentId,
         title: "New Assignment",
-        course: cid as string,
+        course: courseId,
         description: "Assignment details go here.",
         points: 100,
         due: "2024-05-13T23:59",
         available: "2024-05-06T00:00",
         until: "2024-05-20T23:59",
-    });
+    };
+    
+   
+    const [assignment, setAssignment] = useState<Omit<Assignment, "_id"> & { _id?: string }>(initialAssignmentState);
 
+  
     useEffect(() => {
         if (existingAssignment) {
-            console.log("Loading existing assignment:", existingAssignment);
             setAssignment(existingAssignment);
         }
     }, [existingAssignment]);
 
-    const handleSave = () => {
-        console.log("Saving assignment:", assignment);
-        console.log("Is new?", isNew);
-        
+    const handleSave = async () => {
         if (isNew) {
-            console.log("Dispatching addAssignment");
-            dispatch(addAssignment(assignment));
+           
+            try {
+                
+                const assignmentToCreate = { ...assignment, _id: undefined }; 
+                const newAssignment = await createAssignmentForCourse(courseId, assignmentToCreate);
+                dispatch(addAssignment(newAssignment)); 
+            } catch (error) {
+                console.error("Error creating assignment:", error);
+            }
         } else {
-            console.log("Dispatching updateAssignment");
-            dispatch(updateAssignment(assignment as Assignment));
+            
+            try {
+                const fullAssignment = assignment as Assignment;
+                await clientUpdateAssignment(fullAssignment);
+                dispatch(updateAssignment(fullAssignment)); 
+            } catch (error) {
+                console.error("Error updating assignment:", error);
+            }
         }
         
-        console.log("Navigating back to assignments");
-        router.push(`/Courses/${cid}/Assignments`);
+        router.push(`/Courses/${courseId}/Assignments`);
     };
 
     const handleCancel = () => {
-        console.log("Canceling");
-        router.push(`/Courses/${cid}/Assignments`);
+        router.push(`/Courses/${courseId}/Assignments`);
     };
 
     return (
