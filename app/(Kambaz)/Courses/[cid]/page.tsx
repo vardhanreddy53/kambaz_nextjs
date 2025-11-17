@@ -1,12 +1,12 @@
 "use client"
-import { useEffect } from "react";
+import { useEffect, useCallback } from "react";
 import Link from "next/link";
-import { Row, Col, Card, CardImg, CardBody, CardTitle, CardText, Button } from "react-bootstrap";
+import { Row, Col, Card, CardImg, CardBody, CardTitle, CardText } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { setCourses } from "../reducer";
-// import { setEnrollments } from "../client";
 import EnrollmentButton from "../../components/EnrollmentButton";
 import * as client from "../client"; 
+import { setEnrollments } from "../../Enrollments/reducer";
 
 interface Course {
   _id: string;
@@ -21,6 +21,12 @@ interface Course {
   image: string;
 }
 
+interface Enrollment {
+  _id: string;
+  user: string;
+  course: string;
+}
+
 interface User {
   _id: string;
 }
@@ -33,7 +39,7 @@ interface RootState {
     currentUser: User | null;
   };
   enrollmentsReducer: {
-    enrollments: any[];
+    enrollments: Enrollment[];
   };
 }
 
@@ -45,7 +51,7 @@ export default function CourseCatalog() {
   const currentUserId = currentUser?._id || "123";
 
   // --- Data Fetching Logic ---
-  const fetchAllData = async () => {
+  const fetchAllData = useCallback(async () => {
     try {
       // 1. Fetch ALL courses for the catalog view
       const allCourses = await client.fetchAllCourses();
@@ -58,11 +64,11 @@ export default function CourseCatalog() {
     } catch (error) {
       console.error("Error fetching data:", error);
     }
-  };
+  }, [currentUserId, dispatch]);
 
   useEffect(() => {
     fetchAllData();
-  }, [currentUserId]);
+  }, [fetchAllData]);
 
   return (
     <div id="wd-course-catalog" className="p-4">
@@ -104,9 +110,9 @@ export default function CourseCatalog() {
                   {/* Enrollment Management: Shows Enroll/Unenroll button */}
                   <div className="d-flex justify-content-between align-items-center mt-2">
                     <EnrollmentButton courseId={course._id} /> 
-                    <Button variant="outline-primary" as={Link} href={`/Courses/${course._id}/Home`}>
+                    <Link href={`/Courses/${course._id}/Home`} className="btn btn-outline-primary">
                       View
-                    </Button>
+                    </Link>
                   </div>
                 </CardBody>
               </Card>
