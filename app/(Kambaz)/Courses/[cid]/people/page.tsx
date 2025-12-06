@@ -1,114 +1,84 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
-import PeopleTable from "./Table";
-import * as userClient from "../../../Account/client";
-import * as enrollmentClient from "../../client";
+import PeopleTable from "../../[cid]/people/Table";
+import * as client from "../../../Account/client";
+import type { User } from "../../../Account/client"; 
 import { FormControl } from "react-bootstrap";
+import { FaPlus } from "react-icons/fa6";
 
-interface User {
-  _id: string;
-  firstName: string;
-  lastName: string;
-  loginId: string;
-  section: string;
-  role: string;
-  lastActivity: string;
-  totalActivity: string;
-}
-
-interface Enrollment {
-  _id: string;
-  user: string;
-  course: string;
-}
-
-export default function CoursePeople() {
-  const { cid } = useParams();
-  const courseId = cid as string;
+export default function Users() {
   const [users, setUsers] = useState<User[]>([]);
-  const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
+  const { uid } = useParams();
   const [role, setRole] = useState("");
   const [name, setName] = useState("");
 
-  const fetchEnrolledUsers = async () => {
-    try {
-      // Get all enrollments for this course
-      const enrollments = await enrollmentClient.findUsersInCourse(courseId);
-      
-      // Get all users
-      const allUsers = await userClient.findAllUsers();
-      
-      // Filter users who are enrolled in this course
-      const enrolledUserIds = enrollments.map((e: Enrollment) => e.user);
-      const enrolledUsers = allUsers.filter((user: User) => 
-        enrolledUserIds.includes(user._id)
-      );
-      
-      setUsers(enrolledUsers);
-      setFilteredUsers(enrolledUsers);
-    } catch (error) {
-      console.error("Error fetching enrolled users:", error);
+  const filterUsersByName = async (name: string) => {
+    setName(name);
+    if (name) {
+      const users = await client.findUsersByPartialName(name);
+      setUsers(users);
+    } else {
+      fetchUsers();
     }
   };
 
-  const filterUsersByName = (searchName: string) => {
-    setName(searchName);
-    if (searchName) {
-      const filtered = users.filter(user => 
-        `${user.firstName} ${user.lastName}`.toLowerCase().includes(searchName.toLowerCase())
-      );
-      setFilteredUsers(filtered);
+  const filterUsersByRole = async (role: string) => {
+    setRole(role);
+    if (role) {
+      const users = await client.findUsersByRole(role);
+      setUsers(users);
     } else {
-      setFilteredUsers(users);
+      fetchUsers();
     }
   };
 
-  const filterUsersByRole = (selectedRole: string) => {
-    setRole(selectedRole);
-    if (selectedRole) {
-      const filtered = users.filter(user => user.role === selectedRole);
-      setFilteredUsers(filtered);
-    } else {
-      setFilteredUsers(users);
-    }
+  const createUser = async () => {
+    const user = await client.createUser({
+      firstName: "New",
+      lastName: `User${users.length + 1}`,
+      username: `newuser${Date.now()}`,
+      password: "password123",
+      email: `email${users.length + 1}@neu.edu`,
+      section: "S101",
+      role: "STUDENT",
+    });
+    setUsers([...users, user]);
+  };
+
+  const fetchUsers = async () => {
+    const users = await client.findAllUsers();
+    setUsers(users);
   };
 
   useEffect(() => {
-    fetchEnrolledUsers();
-  }, [courseId]);
+    fetchUsers();
+  }, [uid]);
 
   return (
-    <div className="wd-course-people p-4">
-      <h3>People</h3>
-      
-      <div className="d-flex mb-3">
-        <FormControl 
-          value={name}
-          onChange={(e) => filterUsersByName(e.target.value)} 
-          placeholder="Search people"
-          className="me-2 w-25 wd-filter-by-name" 
-        />
-        <select 
-          value={role} 
-          onChange={(e) => filterUsersByRole(e.target.value)}
-          className="form-select w-25 wd-select-role"
-        >
-          <option value="">All Roles</option>
-          <option value="STUDENT">Students</option>
-          <option value="TA">Assistants</option>
-          <option value="FACULTY">Faculty</option>
-          <option value="ADMIN">Administrators</option>
-        </select>
-      </div>
-
-      {filteredUsers.length === 0 && (
-        <div className="alert alert-info">
-          No users enrolled in this course.
-        </div>
-      )}
-
-      <PeopleTable users={filteredUsers} fetchUsers={fetchEnrolledUsers} />
+    <div>
+      <button onClick={createUser} className="float-end btn btn-danger wd-add-people">
+        <FaPlus className="me-2" />
+        Users
+      </button>
+      <h3>Users</h3>
+      <FormControl 
+        onChange={(e) => filterUsersByName(e.target.value)} 
+        placeholder="Search people"
+        className="float-start w-25 me-2 wd-filter-by-name" 
+      />
+      <select 
+        value={role} 
+        onChange={(e) => filterUsersByRole(e.target.value)}
+        className="form-select float-start w-25 wd-select-role"
+      >
+        <option value="">All Roles</option>
+        <option value="STUDENT">Students</option>
+        <option value="TA">Assistants</option>
+        <option value="FACULTY">Faculty</option>
+        <option value="ADMIN">Administrators</option>
+      </select>
+      <PeopleTable users={users} fetchUsers={fetchUsers}/>
     </div>
   );
 }

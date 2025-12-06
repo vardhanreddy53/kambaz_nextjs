@@ -1,12 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"; 
 import { v4 as uuidv4 } from "uuid";
 
-interface Lesson {
+export interface Lesson {
   _id: string;
   name: string;
+  description?: string;
 }
 
-interface Module {
+export interface Module {
   _id: string;
   name: string;
   description: string;
@@ -18,7 +19,6 @@ interface Module {
 interface ModulesState {
   modules: Module[];
 }
-
 
 const initialState: ModulesState = {
   modules: [], 

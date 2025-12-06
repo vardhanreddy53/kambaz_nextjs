@@ -10,20 +10,7 @@ import LessonControlButtons from './LessonControlButtons';
 import { addModule, editModule, updateModule, deleteModule, setModules } from "./reducer"; 
 import { useSelector, useDispatch } from "react-redux";
 import * as client from "../../client";
-
-interface Lesson {
-  _id: string;
-  name: string;
-}
-
-interface Module {
-  _id: string;
-  name: string;
-  description: string;
-  course: string;
-  lessons: Lesson[];
-  editing?: boolean;
-}
+import type { Module, Lesson } from "./reducer"; // Import types from reducer
 
 interface RootState {
   modulesReducer: {
@@ -50,17 +37,17 @@ export default function Modules() {
     }
   }, [cid, dispatch]);
 
-  const onUpdateModule = async (module: any) => {
-     await client.updateModule(cid as string, module);
-   const newModules = modules.map((m: any) =>
-     m._id === module._id ? module : m
-   );
-   dispatch(setModules(newModules));
+  const onUpdateModule = async (module: Module) => {
+    await client.updateModule(cid as string, module);
+    const newModules = modules.map((m: Module) =>
+      m._id === module._id ? module : m
+    );
+    dispatch(setModules(newModules));
   };
 
   const onRemoveModule = async (moduleId: string) => {
     try {
-      await client.deleteModule(cid,moduleId);
+      await client.deleteModule(cid, moduleId);
       dispatch(deleteModule(moduleId));
     } catch (error) {
       console.error("Error deleting module:", error);
