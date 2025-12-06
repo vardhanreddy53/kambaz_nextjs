@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ListGroup } from "react-bootstrap";
+import { Nav, NavLink } from "react-bootstrap";
 import { useSelector } from "react-redux";
 
 interface User {
@@ -31,20 +31,27 @@ export default function AccountNavigation() {
   const pathname = usePathname();
   
   return (
-    <div id="wd-account-navigation" className="mt-3">
-      <ListGroup>
+      <Nav variant="pills" className="flex-column">
         {links.map((link) => (
-          <ListGroup.Item 
+          <NavLink 
             key={link}
             as={Link} 
             href={`/Account/${link}`}
             active={pathname.includes(link.toLowerCase())}
-            className="border-0"
           >
             {link}
-          </ListGroup.Item>
+          </NavLink>
         ))}
-      </ListGroup>
-    </div>
+        {currentUser && currentUser.role === "ADMIN" && (
+          <NavLink 
+            as={Link} 
+            href="/Account/Users"
+            active={pathname.endsWith('Users')}
+          >
+            Users
+          </NavLink>
+        )}
+      </Nav>
+
   );
 }

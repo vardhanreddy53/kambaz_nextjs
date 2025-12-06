@@ -32,10 +32,15 @@ export default function EnrollmentButton({ courseId }: EnrollmentButtonProps) {
     const dispatch = useDispatch();
     const { currentUser } = useSelector((state: RootState) => state.accountReducer);
     const { enrollments } = useSelector((state: RootState) => state.enrollmentsReducer);
-    const currentUserId = currentUser?._id || "123"; 
+
+    // ❗ IMPORTANT: never default a userId to "123"
+    const currentUserId = currentUser?._id;
+
     const [loading, setLoading] = useState(false);
-    
-    const isEnrolled = enrollments.some((e: Enrollment) => e.course === courseId && e.user === currentUserId);
+
+    const isEnrolled = !!enrollments.find(
+        (e) => e.user === currentUserId && e.course === courseId
+    );
 
     const handleEnroll = async () => {
         if (loading || !currentUserId) return;
@@ -46,7 +51,7 @@ export default function EnrollmentButton({ courseId }: EnrollmentButtonProps) {
             dispatch(addEnrollment(newEnrollment));
         } catch (error) {
             console.error("Error enrolling in course:", error);
-            window.alert("Failed to enroll in the course."); 
+            alert("Failed to enroll in the course.");
         } finally {
             setLoading(false);
         }
@@ -55,41 +60,36 @@ export default function EnrollmentButton({ courseId }: EnrollmentButtonProps) {
     const handleUnenroll = async () => {
         if (loading || !currentUserId) return;
 
-        if (!window.confirm("Are you sure you want to unenroll from this course?")) {
-            return;
-        }
+        if (!confirm("Are you sure you want to unenroll from this course?")) return;
 
         try {
             setLoading(true);
             await client.unenrollFromCourse(currentUserId, courseId);
-            dispatch(removeEnrollment(courseId));
+            dispatch(removeEnrollment({ user: currentUserId, course: courseId }));
+
         } catch (error) {
-            console.error("Error unenrolling from course:", error);
-            window.alert("Failed to unenroll from the course.");
+            console.error("Error unenrolling:", error);
+            alert("Failed to unenroll.");
         } finally {
             setLoading(false);
         }
     };
 
-    if (loading) {
-        return <Button variant="secondary" disabled>Processing...</Button>;
-    }
-    
     if (!currentUserId) {
         return <Button variant="secondary" disabled>Sign In to Enroll</Button>;
     }
 
-    if (isEnrolled) {
-        return (
-            <Button variant="danger" onClick={handleUnenroll} disabled={loading}>
-                Unenroll
-            </Button>
-        );
-    } else {
-        return (
-            <Button variant="success" onClick={handleEnroll} disabled={loading}>
-                Enroll
-            </Button>
-        );
+    if (loading) {
+        return <Button variant="secondary" disabled>Processing...</Button>;
     }
+
+    return isEnrolled ? (
+        <Button variant="danger" onClick={handleUnenroll}>
+            Unenroll
+        </Button>
+    ) : (
+        <Button variant="success" onClick={handleEnroll}>
+            Enroll
+        </Button>
+    );
 }

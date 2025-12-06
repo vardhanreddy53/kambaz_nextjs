@@ -61,14 +61,14 @@ export default function MyCoursesPage() {
 
   const currentUserId = currentUser?._id || "123";
 
-  const handleUnenroll = async (courseId: string) => {
-    try {
-      await client.unenrollFromCourse(currentUserId, courseId);
-      dispatch(removeEnrollment(courseId));
-    } catch (error) {
-      console.error("Error unenrolling from course:", error);
-    }
-  };
+ const handleUnenroll = async (courseId: string) => {
+  try {
+    await client.unenrollFromCourse(currentUserId, courseId);
+    dispatch(removeEnrollment({ user: currentUserId, course: courseId }));
+  } catch (error) {
+    console.error("Error unenrolling from course:", error);
+  }
+};
 
   const fetchAllData = async () => {
     try {

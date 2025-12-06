@@ -33,7 +33,7 @@ interface RootState {
 
 export default function Modules() {
   const params = useParams();
-  const cid = params.cid as string | string[] | undefined; 
+  const cid = params.cid as string; 
   
   const [moduleName, setModuleName] = useState("");
   const { modules } = useSelector((state: RootState) => state.modulesReducer);
@@ -50,18 +50,17 @@ export default function Modules() {
     }
   }, [cid, dispatch]);
 
-  const onUpdateModule = async (module: Module) => {
-    try {
-      await client.updateModule(module);
-      dispatch(updateModule({ ...module, editing: false }));
-    } catch (error) {
-      console.error("Error updating module:", error);
-    }
+  const onUpdateModule = async (module: any) => {
+     await client.updateModule(cid as string, module);
+   const newModules = modules.map((m: any) =>
+     m._id === module._id ? module : m
+   );
+   dispatch(setModules(newModules));
   };
 
   const onRemoveModule = async (moduleId: string) => {
     try {
-      await client.deleteModule(moduleId);
+      await client.deleteModule(cid,moduleId);
       dispatch(deleteModule(moduleId));
     } catch (error) {
       console.error("Error deleting module:", error);

@@ -1,11 +1,10 @@
 "use client";
-import React from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
-import { Table } from "react-bootstrap";
-import { FaUserCircle } from "react-icons/fa";
-
-import usersData from "../../../Database/users.json";
-import enrollmentsData from "../../../Database/enrollments.json";
+import PeopleTable from "./Table";
+import * as userClient from "../../../Account/client";
+import * as enrollmentClient from "../../client";
+import { FormControl } from "react-bootstrap";
 
 interface User {
   _id: string;
@@ -24,53 +23,92 @@ interface Enrollment {
   course: string;
 }
 
-const users: User[] = usersData as User[];
-const enrollments: Enrollment[] = enrollmentsData as Enrollment[];
+export default function CoursePeople() {
+  const { cid } = useParams();
+  const courseId = cid as string;
+  const [users, setUsers] = useState<User[]>([]);
+  const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
+  const [role, setRole] = useState("");
+  const [name, setName] = useState("");
 
-export default function PeopleTable() {
-  const params = useParams();
-  const cid = params.cid as string;
+  const fetchEnrolledUsers = async () => {
+    try {
+      // Get all enrollments for this course
+      const enrollments = await enrollmentClient.findUsersInCourse(courseId);
+      
+      // Get all users
+      const allUsers = await userClient.findAllUsers();
+      
+      // Filter users who are enrolled in this course
+      const enrolledUserIds = enrollments.map((e: Enrollment) => e.user);
+      const enrolledUsers = allUsers.filter((user: User) => 
+        enrolledUserIds.includes(user._id)
+      );
+      
+      setUsers(enrolledUsers);
+      setFilteredUsers(enrolledUsers);
+    } catch (error) {
+      console.error("Error fetching enrolled users:", error);
+    }
+  };
+
+  const filterUsersByName = (searchName: string) => {
+    setName(searchName);
+    if (searchName) {
+      const filtered = users.filter(user => 
+        `${user.firstName} ${user.lastName}`.toLowerCase().includes(searchName.toLowerCase())
+      );
+      setFilteredUsers(filtered);
+    } else {
+      setFilteredUsers(users);
+    }
+  };
+
+  const filterUsersByRole = (selectedRole: string) => {
+    setRole(selectedRole);
+    if (selectedRole) {
+      const filtered = users.filter(user => user.role === selectedRole);
+      setFilteredUsers(filtered);
+    } else {
+      setFilteredUsers(users);
+    }
+  };
+
+  useEffect(() => {
+    fetchEnrolledUsers();
+  }, [courseId]);
 
   return (
-    <div id="wd-people-table">
-      <Table striped>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Login ID</th>
-            <th>Section</th>
-            <th>Role</th>
-            <th>Last Activity</th>
-            <th>Total Activity</th>
-          </tr>
-        </thead>
-        <tbody>
-          {users
-            
-            .filter((usr: User) =>
-             
-              enrollments.some(
-                (enrollment: Enrollment) =>
-                  enrollment.user === usr._id && enrollment.course === cid
-              )
-            )
-            
-            .map((user: User) => (
-              <tr key={user._id}>
-                <td className="wd-full-name text-nowrap">
-                  <FaUserCircle className="me-2 fs-1 text-secondary" />
-                  <span className="wd-first-name">{user.firstName}</span>{" "}
-                  <span className="wd-last-name">{user.lastName}</span>
-                </td>
-                <td className="wd-login-id">{user.loginId}</td>
-                <td className="wd-section">{user.section}</td>
-                <td className="wd-role">{user.role}</td>
-                <td className="wd-last-activity">{user.lastActivity}</td>
-                <td className="wd-total-activity">{user.totalActivity}</td>
-              </tr>
-            ))}
-        </tbody>
-      </Table>
+    <div className="wd-course-people p-4">
+      <h3>People</h3>
+      
+      <div className="d-flex mb-3">
+        <FormControl 
+          value={name}
+          onChange={(e) => filterUsersByName(e.target.value)} 
+          placeholder="Search people"
+          className="me-2 w-25 wd-filter-by-name" 
+        />
+        <select 
+          value={role} 
+          onChange={(e) => filterUsersByRole(e.target.value)}
+          className="form-select w-25 wd-select-role"
+        >
+          <option value="">All Roles</option>
+          <option value="STUDENT">Students</option>
+          <option value="TA">Assistants</option>
+          <option value="FACULTY">Faculty</option>
+          <option value="ADMIN">Administrators</option>
+        </select>
+      </div>
+
+      {filteredUsers.length === 0 && (
+        <div className="alert alert-info">
+          No users enrolled in this course.
+        </div>
+      )}
+
+      <PeopleTable users={filteredUsers} fetchUsers={fetchEnrolledUsers} />
     </div>
   );
 }
