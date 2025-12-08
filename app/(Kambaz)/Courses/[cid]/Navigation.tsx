@@ -21,7 +21,7 @@ export default function CourseNavigation() {
             dest = "https://zoom.com";
             break;
           case "Quizzes":
-            dest = `https://northeastern.instructure.com/courses/${cid}/quizzes`;
+            dest =`/Courses/${cid}/Quizzes`;
             break;
           case "Grades":
             dest = `https://northeastern.instructure.com/courses/${cid}/grades`;
@@ -37,7 +37,7 @@ export default function CourseNavigation() {
             key={link}
             href={dest}
             className={`list-group-item border border-0 ${isActive ? "active" : "text-danger"}`}
-            {...(link === "Piazza" || link === "Zoom" || link === "Quizzes" || link === "Grades" ? { target: "_blank" } : {})}
+            {...(link === "Piazza" || link === "Zoom" || link === "Grades" ? { target: "_blank" } : {})}
           >
             {link}
           </Link>
