@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { QuizQuestion, QuizChoice } from "../../types";
+import Editor from 'react-simple-wysiwyg';
 
 interface QuestionEditorProps {
   question: QuizQuestion;
@@ -141,13 +142,17 @@ export default function QuestionEditor({ question, onSave, onCancel }: QuestionE
         {/* Question Text */}
         <Form.Group className="mb-3">
           <Form.Label>Question</Form.Label>
-          <Form.Control
-            as="textarea"
-            rows={3}
-            value={formData.question}
-            onChange={(e) => setFormData({ ...formData, question: e.target.value })}
-            placeholder="Enter your question here..."
-          />
+          <Editor
+    value={formData.question || ''}
+    onChange={(e) => setFormData({ ...formData, question: e.target.value })}
+    containerProps={{ 
+      style: { 
+        minHeight: '200px', 
+        border: '1px solid #dee2e6', 
+        borderRadius: '0.375rem' 
+      } 
+    }}
+  />
         </Form.Group>
 
         {/* Multiple Choice Options */}

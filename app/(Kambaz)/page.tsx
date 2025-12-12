@@ -6,6 +6,8 @@ export default function Kambaz(){
       <p>Hi My Name is Sai Vardhan Reddy Pathuri Currently pursuing</p> 
         <p>my master in computer science from Northeastern university i have joined NEU for Fall 2025 and taken CS5610</p><p>202610 WebDev By Jose Annunziato</p>
     <a href="https://github.com/vardhanreddy53/kambaz_nextjs">Github</a>
+    <p>Bala Asrith Chavla</p>
+    <a href="https://github.com/chavalab">Github</a>
     <div id="wd-labs">
      <h1>Labs</h1>
      <ol>

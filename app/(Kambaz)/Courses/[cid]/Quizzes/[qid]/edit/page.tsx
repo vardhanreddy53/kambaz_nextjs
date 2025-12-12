@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Button, Form, Nav, Tab } from 'react-bootstrap';
 import { useSelector, useDispatch } from "react-redux";
+import Editor from 'react-simple-wysiwyg';
 import { setCurrentQuiz, updateQuiz as updateQuizAction } from "../../reducer";
 import { Quiz } from "../../types";
 import * as client from "../../../../client";
@@ -132,15 +133,13 @@ export default function QuizEditor() {
                 />
               </Form.Group>
 
-              {/* Description */}
+              {/* Description with WYSIWYG */}
               <Form.Group className="mb-3">
                 <Form.Label>Description</Form.Label>
-                <Form.Control
-                  as="textarea"
-                  rows={4}
+                <Editor
                   value={formData.description || ''}
                   onChange={(e) => handleInputChange('description', e.target.value)}
-                  placeholder="Quiz instructions..."
+                  containerProps={{ style: { minHeight: '200px', border: '1px solid #dee2e6', borderRadius: '0.375rem' } }}
                 />
               </Form.Group>
 
