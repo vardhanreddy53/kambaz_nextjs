@@ -124,7 +124,18 @@ export default function Quizzes() {
   // Filter quizzes based on user role
   const displayQuizzes = isFaculty 
     ? quizzes 
-    : quizzes.filter(q => q.published);
+    : quizzes.filter(q => {
+      if (q.published) return true;
+      // Show unpublished quizzes if student has attempted them
+      const hasAttempted = userAttempts.some(attempt => attempt.quiz === q._id);
+      return hasAttempted;
+    });
+
+    const sortedQuizzes = [...displayQuizzes].sort((a, b) => {
+  const dateA = a.availableDate ? new Date(a.availableDate).getTime() : 0;
+  const dateB = b.availableDate ? new Date(b.availableDate).getTime() : 0;
+  return dateA - dateB; // Ascending order
+});
 
   return (
     <div className="wd-quizzes p-4">
@@ -146,7 +157,7 @@ export default function Quizzes() {
       )}
 
       <div className="list-group">
-        {displayQuizzes.map((quiz) => {
+        {sortedQuizzes.map((quiz) => {
           const availability = getAvailabilityStatus(quiz);
           const studentScore = getLatestScore(quiz._id);
           
