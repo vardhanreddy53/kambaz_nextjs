@@ -12,9 +12,21 @@ import { useSelector, useDispatch } from "react-redux";
 import * as client from "../../client";
 import type { Module, Lesson } from "./reducer"; // Import types from reducer
 
+interface User {
+  _id: string;
+  role: string;
+  username?: string;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+}
+
 interface RootState {
   modulesReducer: {
     modules: Module[];
+  };
+  accountReducer: {
+    currentUser: User | null;
   };
 }
 
@@ -24,7 +36,11 @@ export default function Modules() {
   
   const [moduleName, setModuleName] = useState("");
   const { modules } = useSelector((state: RootState) => state.modulesReducer);
+  const { currentUser } = useSelector((state: RootState) => state.accountReducer);
   const dispatch = useDispatch();
+
+  // Check if user is Faculty or Admin (not Student)
+  const isFacultyOrAdmin = currentUser?.role === "FACULTY" || currentUser?.role === "ADMIN";
 
   const fetchModules = useCallback(async () => {
     const courseId = Array.isArray(cid) ? cid[0] : cid;
@@ -38,6 +54,10 @@ export default function Modules() {
   }, [cid, dispatch]);
 
   const onUpdateModule = async (module: Module) => {
+    if (!isFacultyOrAdmin) {
+      console.warn("Students cannot update modules");
+      return;
+    }
     await client.updateModule(cid as string, module);
     const newModules = modules.map((m: Module) =>
       m._id === module._id ? module : m
@@ -46,6 +66,10 @@ export default function Modules() {
   };
 
   const onRemoveModule = async (moduleId: string) => {
+    if (!isFacultyOrAdmin) {
+      console.warn("Students cannot delete modules");
+      return;
+    }
     try {
       await client.deleteModule(cid, moduleId);
       dispatch(deleteModule(moduleId));
@@ -55,6 +79,11 @@ export default function Modules() {
   };
 
   const onCreateModuleForCourse = async () => {
+    if (!isFacultyOrAdmin) {
+      console.warn("Students cannot create modules");
+      return;
+    }
+    
     const courseId = Array.isArray(cid) ? cid[0] : cid; 
     if (!courseId) {
       console.error("No course ID found");
@@ -85,12 +114,24 @@ export default function Modules() {
 
   return (
     <div className="wd-modules">
-      <ModulesControls 
-        moduleName={moduleName} 
-        setModuleName={setModuleName}
-        addModule={onCreateModuleForCourse} 
-      />
-      <br/><br/><br/><br/><br/>
+      {/* Only show ModulesControls for Faculty/Admin */}
+      {isFacultyOrAdmin && (
+        <>
+          <ModulesControls 
+            moduleName={moduleName} 
+            setModuleName={setModuleName}
+            addModule={onCreateModuleForCourse} 
+          />
+          <br/><br/><br/><br/><br/>
+        </>
+      )}
+      
+      {/* Show info message for students */}
+      {!isFacultyOrAdmin && (
+        <div className="alert alert-info">
+          You are viewing this course as a student. Module management is restricted to faculty and administrators.
+        </div>
+      )}
       
       <ListGroup className="rounded-0" id="wd-modules">
         {courseModules.map((moduleItem) => ( 
@@ -101,7 +142,7 @@ export default function Modules() {
             <div className="wd-title p-3 ps-2 bg-secondary">
               <BsGripVertical className="me-2 fs-3" />
               {!moduleItem.editing && moduleItem.name}
-              {moduleItem.editing && (
+              {moduleItem.editing && isFacultyOrAdmin && (
                 <FormControl 
                   className="w-50 d-inline-block"
                   onChange={(e) =>
@@ -117,17 +158,22 @@ export default function Modules() {
                   defaultValue={moduleItem.name}
                 />
               )}
-              <ModuleControlButtons 
-                moduleId={moduleItem._id}
-                deleteModule={(moduleId) => onRemoveModule(moduleId)}
-                editModule={(moduleId) => dispatch(editModule(moduleId))}
-              />
+              {/* Only show control buttons for Faculty/Admin */}
+              {isFacultyOrAdmin && (
+                <ModuleControlButtons 
+                  moduleId={moduleItem._id}
+                  deleteModule={(moduleId) => onRemoveModule(moduleId)}
+                  editModule={(moduleId) => dispatch(editModule(moduleId))}
+                />
+              )}
             </div>
             
             <ListGroup className="wd-lessons rounded-0">
               {moduleItem.lessons?.map((lesson) => (
                 <ListGroupItem key={lesson._id} className="wd-lesson p-3 ps-1">
-                  <BsGripVertical className="me-2 fs-3" /> {lesson.name} <LessonControlButtons />
+                  <BsGripVertical className="me-2 fs-3" /> {lesson.name}
+                  {/* Only show lesson control buttons for Faculty/Admin */}
+                  {isFacultyOrAdmin && <LessonControlButtons />}
                 </ListGroupItem>
               ))}
             </ListGroup>

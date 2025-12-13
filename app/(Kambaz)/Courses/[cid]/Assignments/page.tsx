@@ -18,9 +18,17 @@ interface Assignment {
   availableUntil?: string;
 }
 
+interface User {
+  _id: string;
+  role: string;
+}
+
 interface RootState {
   assignmentsReducer: {
     assignments: Assignment[];
+  };
+  accountReducer: {
+    currentUser: User | null;
   };
 }
 
@@ -30,6 +38,10 @@ export default function Assignments() {
   const dispatch = useDispatch();
   const router = useRouter();
   const { assignments } = useSelector((state: RootState) => state.assignmentsReducer);
+  const { currentUser } = useSelector((state: RootState) => state.accountReducer);
+
+  // Check if user is Faculty or Admin (not Student)
+  const isFacultyOrAdmin = currentUser?.role === "FACULTY" || currentUser?.role === "ADMIN";
 
   const fetchAssignments = useCallback(async () => {
     if (!courseId) return;
@@ -42,6 +54,10 @@ export default function Assignments() {
   }, [courseId, dispatch]);
 
   const onDeleteAssignment = async (assignmentId: string) => {
+    if (!isFacultyOrAdmin) {
+      console.warn("Students cannot delete assignments");
+      return;
+    }
     if (!confirm("Are you sure you want to delete this assignment?")) return;
     try {
       await client.deleteAssignment(courseId, assignmentId);
@@ -59,10 +75,20 @@ export default function Assignments() {
     <div className="wd-assignments">
       <div className="d-flex justify-content-between mb-3">
         <h3>Assignments</h3>
-        <Button variant="danger" onClick={() => router.push(`/Courses/${courseId}/Assignments/new`)}>
-          + Assignment
-        </Button>
+        {/* Only show Add Assignment button for Faculty/Admin */}
+        {isFacultyOrAdmin && (
+          <Button variant="danger" onClick={() => router.push(`/Courses/${courseId}/Assignments/new`)}>
+            + Assignment
+          </Button>
+        )}
       </div>
+
+      {/* Show info message for students */}
+      {!isFacultyOrAdmin && (
+        <div className="alert alert-info">
+          You are viewing assignments as a student. Assignment management is restricted to faculty and administrators.
+        </div>
+      )}
 
       <ListGroup className="rounded-0">
         {assignments.length === 0 && (
@@ -86,16 +112,19 @@ export default function Assignments() {
                 </div>
               </div>
               <div className="d-flex align-items-center">
-                <Button 
-                  variant="link" 
-                  className="text-danger p-0 ms-2" 
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onDeleteAssignment(assignment._id);
-                  }}
-                >
-                  Delete
-                </Button>
+                {/* Only show Delete button for Faculty/Admin */}
+                {isFacultyOrAdmin && (
+                  <Button 
+                    variant="link" 
+                    className="text-danger p-0 ms-2" 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onDeleteAssignment(assignment._id);
+                    }}
+                  >
+                    Delete
+                  </Button>
+                )}
               </div>
             </div>
           </ListGroupItem>

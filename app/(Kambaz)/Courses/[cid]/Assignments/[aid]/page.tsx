@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { Form, Button } from 'react-bootstrap';
+import { Form, Button, Alert } from 'react-bootstrap';
 import { useSelector, useDispatch } from "react-redux";
 import { updateAssignment, addAssignment } from "../reducer";
 import * as client from "../../../client";
@@ -18,9 +18,17 @@ interface Assignment {
   availableUntil?: string;
 }
 
+interface User {
+  _id: string;
+  role: string;
+}
+
 interface RootState {
   assignmentsReducer: {
     assignments: Assignment[];
+  };
+  accountReducer: {
+    currentUser: User | null;
   };
 }
 
@@ -32,6 +40,11 @@ export default function AssignmentEditor() {
   const dispatch = useDispatch();
   
   const { assignments } = useSelector((state: RootState) => state.assignmentsReducer);
+  const { currentUser } = useSelector((state: RootState) => state.accountReducer);
+  
+  // Check if user is Faculty or Admin (not Student)
+  const isFacultyOrAdmin = currentUser?.role === "FACULTY" || currentUser?.role === "ADMIN";
+  
   const isNew = assignmentId === 'new';
   
   const [formData, setFormData] = useState<Partial<Assignment>>({
@@ -44,16 +57,27 @@ export default function AssignmentEditor() {
   });
 
   useEffect(() => {
+    // Redirect students away from editor
+    if (!isFacultyOrAdmin) {
+      router.push(`/Courses/${courseId}/Assignments`);
+      return;
+    }
+
     if (!isNew) {
       const assignment = assignments.find(a => a._id === assignmentId);
       if (assignment) {
         setFormData(assignment);
       }
     }
-  }, [assignmentId, assignments, isNew]);
+  }, [assignmentId, assignments, isNew, isFacultyOrAdmin, router, courseId]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!isFacultyOrAdmin) {
+      console.warn("Students cannot create or edit assignments");
+      return;
+    }
     
     try {
       if (isNew) {
@@ -75,6 +99,21 @@ export default function AssignmentEditor() {
       console.error("Error saving assignment:", error);
     }
   };
+
+  // Show access denied message for students
+  if (!isFacultyOrAdmin) {
+    return (
+      <div className="wd-assignment-editor">
+        <Alert variant="danger">
+          <Alert.Heading>Access Denied</Alert.Heading>
+          <p>You do not have permission to create or edit assignments. This feature is restricted to faculty and administrators.</p>
+          <Button variant="primary" onClick={() => router.push(`/Courses/${courseId}/Assignments`)}>
+            Back to Assignments
+          </Button>
+        </Alert>
+      </div>
+    );
+  }
 
   return (
     <div className="wd-assignment-editor">

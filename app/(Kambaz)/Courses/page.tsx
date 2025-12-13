@@ -61,14 +61,15 @@ export default function MyCoursesPage() {
 
   const currentUserId = currentUser?._id || "123";
 
- const handleUnenroll = async (courseId: string) => {
-  try {
-    await client.unenrollFromCourse(currentUserId, courseId);
-    dispatch(removeEnrollment({ user: currentUserId, course: courseId }));
-  } catch (error) {
-    console.error("Error unenrolling from course:", error);
-  }
-};
+  // Students can unenroll themselves, Faculty/Admin can also unenroll
+  const handleUnenroll = async (courseId: string) => {
+    try {
+      await client.unenrollFromCourse(currentUserId, courseId);
+      dispatch(removeEnrollment({ user: currentUserId, course: courseId }));
+    } catch (error) {
+      console.error("Error unenrolling from course:", error);
+    }
+  };
 
   const fetchAllData = async () => {
     try {
@@ -137,6 +138,7 @@ export default function MyCoursesPage() {
                     </CardText>
 
                     <div className="d-flex justify-content-between align-items-center mt-2">
+                      {/* All users (students, faculty, admin) can unenroll from their own courses */}
                       <Button 
                         variant="danger" 
                         size="sm"
